@@ -57,7 +57,7 @@ public class AtendimentoDao implements Serializable {
                     ultimoHorario = auxiliar.plusMinutes(servicoDoAtendente.getTempoMedio());
                     PreparedStatement st2 = con.prepareStatement("SELECT * FROM atendimento WHERE (horainicio = ? or ? between horainicio and horafim) and data = ?");
                     st2.setTime(1, Time.valueOf(auxiliar));
-                    st2.setTime(2, Time.valueOf(ultimoHorario));
+                    st2.setTime(2, Time.valueOf(ultimoHorario.plusMinutes(1)));
                     st2.setDate(3, Date.valueOf(dataAgenda));
                     ResultSet rs = st2.executeQuery();
                     if (!rs.next()) {
@@ -134,7 +134,7 @@ public class AtendimentoDao implements Serializable {
                     System.out.println(ultimoHorario);
                     PreparedStatement st2 = con.prepareStatement("SELECT * FROM atendimento WHERE (horainicio = ? or ? between horainicio and horafim) and data = ?");
                     st2.setTime(1, Time.valueOf(auxiliar));
-                    st2.setTime(2, Time.valueOf(ultimoHorario));
+                    st2.setTime(2, Time.valueOf(ultimoHorario.plusMinutes(1)));
                     st2.setDate(3, Date.valueOf(dataAgenda));
                     ResultSet rs = st2.executeQuery();
                     if (!rs.next()) {

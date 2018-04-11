@@ -1,9 +1,8 @@
 <%-- 
-    Document   : agendamentoDeHorarioCliente
-    Created on : 17/03/2018, 22:13:27
+    Document   : agendamentoDeHorarioAdmin
+    Created on : 12/03/2018, 09:35:43
     Author     : ThigoYure
 --%>
-
 <%@taglib prefix="MyTags" uri="/tlds/MyTags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -28,116 +27,81 @@
                     </ul>
                 </div>
                 <div id="BuscaServico" class="col s12">
-                    <form action="agendamentoDeHorarioAdmin.jsp">
-                        <div class="input-field col s12">
-                            <select name="servico">
-                                <option value="" disabled selected>Choose your option</option>
-                                <MyTags:BuscaServicos/>
-                                <c:choose>
-                                    <c:when test="${empty Servicos}">
-                                        <h2>Não existem serviços cadastrados.</h2>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:forEach var="servico" items="${Servicos}">
-                                            <option value="${servico.nome}">${servico.nome}</option>
-                                        </c:forEach>
-                                    </c:otherwise>
-                                </c:choose>
-                            </select>
-                            <label>Busca por serviço</label>
+                    <form action="agendamentoDeHorarioClienteServico.jsp">
+                        <select name="servico">
+                            <option value="" disabled selected>Choose your option</option>
+                            <MyTags:BuscaServicos/>
+                            <c:choose>
+                                <c:when test="${empty Servicos}">
+                                    <h2>Não existem serviços cadastrados.</h2>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="servico" items="${Servicos}">
+                                        <option value="${servico.nome}">
+                                            <b>Serviço:</b>${servico.nome}
+                                        </option>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                        </select>
+                        <label>Busca por serviço</label>
+                        <div class="input-field">
+                            <input name="data" type="text" class="datepicker">
                         </div>
                         <button class="btn" type="submit">Pesquisar</button>
                     </form>
                 </div>
                 <div id="BuscaAtendente" class="col s12">
-                    <form action="agendamentoDeHorarioAdmin.jsp">
-                        <div class="input-field col s12">
-                            <select name="atendente">
-                                <option value="" disabled selected>Choose your option</option>
-                                <MyTags:BuscaAtendentes/>
-                                <c:choose>
-                                    <c:when test="${empty Atendentes}">
-                                        <h2>Não existem Atendentes cadastrados.</h2>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:forEach var="atendente" items="${Atendentes}">
-                                            <option value="${atendente.nome}">${atendente.nome}</option>
-                                        </c:forEach>
-                                    </c:otherwise>
-                                </c:choose>
-                            </select>
-                            <label>Busca por atendente</label>
+                    <form action="agendamentoDeHorarioClienteAtendente.jsp">
+                        <select name="atendente">
+                            <option value="" disabled selected>Choose your option</option>
+                            <MyTags:BuscaAtendentes/>
+                            <c:choose>
+                                <c:when test="${empty Atendentes}">
+                                    <h2>Não existem Atendentes cadastrados.</h2>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="atendente" items="${Atendentes}">
+                                        <option value="${atendente.nome}">${atendente.nome}</option>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                        </select>
+                        <label>Busca por atendente</label>
+                        <div class="input-field">
+                            <input name="data" type="text" class="datepicker">
                         </div>
                         <button class="btn" type="submit">Pesquisar</button>
                     </form>
                 </div>
             </div>
-            <MyTags:BuscaPorServico servico="${param.servico}"/>
-            <c:choose>
-                <c:when test="${not empty AtendimentoPorServico}">
-                    <form action="FrontController?controller=AgendarAtendimentoController" method="POST">
-                        <c:forEach var="opcoes" items="${AtendimentoPorServico}">
-                            <div class="accent-1">
-                                <input class="with-gap" name="opcao" type="radio" id="${opcoes.id}" value="${opcoes.id}" />
-                                <label for="${opcoes.id}">
-                                    <b>Atendente:</b>${opcoes.atendente.nome}</br>
-                                    <b>Horário:</b>${opcoes.horaInicio}
-                                </label>
-                            </div>
-                        </c:forEach>
-                        <div class="input-field col s12">
-                            <input type="hidden" name="cliente" value="${user.email}">
-                        </div>
-                        <input id="data" type="text" name="data" class="datepicker">
-                        <label for="data">Data do Atendimento</label>
-                        <button class="btn" type="submit">Agendar</button>
-                    </form> 
-                </c:when>
-            </c:choose>
-            <MyTags:BuscaPorAtendente atendente="${param.atendente}"/>
-            <c:choose>
-                <c:when test="${not empty AtendimentoPorAtendente}">
-                    <form action="FrontController?controller=AgendarAtendimentoController" method="POST">
-                        <c:forEach var="opcoes" items="${AtendimentoPorAtendente}">
-                            <div class="accent-1">
-                                <input class="with-gap" name="opcao" type="radio" id="${opcoes.id}" value="${opcoes.id}"/>
-                                <label for="${opcoes.id}">
-                                    <b>Serviço:</b>${opcoes.atendente.servico.nome}</br>
-                                    <b>Horário:</b>${opcoes.horaInicio}
-                                </label>
-                            </div>
-                        </c:forEach>
-                        <div class="input-field col s12">
-                            <select name="cliente">
-                                <option value="" disabled selected>Choose your option</option>
-                                <MyTags:BuscaUsuarios/>
-                                <c:choose>
-                                    <c:when test="${empty Usuarios}">
-                                        <h2>Não existem usuários cadastrados.</h2>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:forEach var="usuario" items="${Usuarios}">
-                                            <option value="${usuario.email}">${usuario.nome}</option>
-                                        </c:forEach>
-                                    </c:otherwise>
-                                </c:choose>
-                            </select>
-                            <label>Busca por serviço</label>
-                        </div>
-                        <input id="data" type="text" name="data" class="datepicker">
-                        <label for="data">Data do Atendimento</label>
-                        <button class="btn" type="submit">Agendar</button>
-                    </form> 
-                </c:when>
-            </c:choose>
         </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="js/materialize.min.js"></script>
-        <script type="text/javascript" src="js/initialize.js"/>
         <script type="text/javascript">
             $(document).ready(function () {
-                $('select').material_select();
+                $('.datepicker').pickadate({
+                    selectMonths: true, // Creates a dropdown to control month
+                    selectYears: 15,
+                    monthsFull: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+                    monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    weekdaysFull: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
+                    weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                    today: 'Hoje',
+                    min: true,
+                    max: false,
+                    clear: 'Limpar',
+                    close: 'Pronto',
+                    labelMonthNext: 'Próximo mês',
+                    labelMonthPrev: 'Mês anterior',
+                    labelMonthSelect: 'Selecione um mês',
+                    labelYearSelect: 'Selecione um ano',
+                    format: 'dd/mm/yyyy'
+                    
+                });
+                $('select').material_select({});
             });
         </script>
     </body>
 </html>
+

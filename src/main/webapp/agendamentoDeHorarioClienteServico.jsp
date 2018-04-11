@@ -18,7 +18,7 @@
                 <MyTags:BuscaPorServico servico="${param.servico}" data="${param.data}"/>
                 <c:choose>
                     <c:when test="${not empty AtendimentoPorServico}">
-                        <form action="FrontController?controller=AgendarAtendimentoControllerAdmin" method="POST">
+                        <form action="FrontController?controller=AgendarAtendimentoControllerCliente" method="POST">
                             <select name="opcao">
                                 <option value="" disabled selected>Choose your option</option>
                                 <c:forEach var="opcoes" items="${AtendimentoPorServico}">
@@ -28,23 +28,7 @@
                                     </option>
                                 </c:forEach>
                             </select>
-                            <div class="input-field col s12">
-                                <select name="cliente">
-                                    <option value="" disabled selected>Choose your option</option>
-                                    <MyTags:BuscaUsuarios/>
-                                    <c:choose>
-                                        <c:when test="${empty Usuarios}">
-                                            <h2>Não existem usuários cadastrados.</h2>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:forEach var="usuario" items="${Usuarios}">
-                                                <option value="${usuario.email}">${usuario.nome}</option>
-                                            </c:forEach>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </select>
-                                <label>Busca por serviço</label>
-                            </div>
+                            <input type="hidden" name="cliente" value="${user.email}">
                             <input type="hidden" name="data" value="${param.data}">
                             <input type="hidden" name="servico" value="${param.servico}">
                             <button class="btn" type="submit">Agendar</button>

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author ThigoYure
  */
 @Named
-public class AgendarAtendimentoController implements Command, Serializable {
+public class AgendarAtendimentoControllerAdmin implements Command, Serializable {
 
     @Inject private AtendimentoDao atendimentoDao;
     @Inject private UsuarioDao userDao;
@@ -50,28 +50,28 @@ public class AgendarAtendimentoController implements Command, Serializable {
         atendimento.setHoraFim(horaFim);
         if (req.getParameter("opcao").equals("") || req.getParameter("cliente").equals("") || req.getParameter("data").equals("")) {
             try {
-                res.sendRedirect(req.getContextPath() + "?msg=Preencha os campos vazios.");
+                res.sendRedirect("agendamentoDeHorarioAdmin.jsp?msg=Preencha os campos vazios.");
             } catch (IOException ex) {
-                Logger.getLogger(AgendarAtendimentoController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AgendarAtendimentoControllerAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (atendimentoDao.readByDataHorarioAtendente(atendimento.getData(),atendimento.getHoraInicio(),atendimento.getAtendente().getNome()) != null) {
             try {
-                res.sendRedirect(req.getContextPath()+"?msg= Ja existe um atendimento marcado para esse horario e data com esse atendente.");
+                res.sendRedirect("agendamentoDeHorarioAdmin.jsp?msg= Ja existe um atendimento marcado para esse horario e data com esse atendente.");
             } catch (IOException ex) {
-                Logger.getLogger(AgendarAtendimentoController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AgendarAtendimentoControllerAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             if (atendimentoDao.create(atendimento)) {
                 try {
-                    res.sendRedirect(req.getContextPath() + "?msg=Horario marcado com sucesso.");
+                    res.sendRedirect("agendamentoDeHorarioAdmin.jsp?msg=Horario marcado com sucesso.");
                 } catch (IOException ex) {
-                    Logger.getLogger(AgendarAtendimentoController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AgendarAtendimentoControllerAdmin.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 try {
-                    res.sendRedirect(req.getContextPath() + "?msg=Nao foi possivel marcar o horario.");
+                    res.sendRedirect("agendamentoDeHorarioAdmin.jsp?msg=Nao foi possivel marcar o horario.");
                 } catch (IOException ex) {
-                    Logger.getLogger(AgendarAtendimentoController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AgendarAtendimentoControllerAdmin.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

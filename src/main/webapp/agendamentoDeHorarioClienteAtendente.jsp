@@ -21,7 +21,7 @@
                         <h2>Não existem serviços cadastrados para esse atendente ou não foi selecionado nenhum serviço ainda.</h2>
                     </c:when>
                     <c:otherwise>
-                        <form action="agendamentoDeHorarioAdminAtendente.jsp?atendente=${param.atendente}&data=${param.data}" method="POST">
+                        <form action="agendamentoDeHorarioAdminAtendente?atendente=${param.atendente}&data=${param.data}" method="POST">
                             <select name="servico">
                                 <option value="" disabled selected>Choose your option</option>
                                 <c:forEach var="servicos" items="${HorariosPorAtendente}">
@@ -40,32 +40,16 @@
                     <MyTags:BuscaPorAtendente atendente="${param.atendente}" data="${param.data}" servico="${param.servico}"/>
                     <c:choose>
                         <c:when test="${not empty AtendimentoPorAtendente}">
-                            <form action="FrontController?controller=AgendarAtendimentoControllerAdmin" method="POST">
+                            <form action="FrontController?controller=AgendarAtendimentoControllerCliente" method="POST">
                                 <select name="opcao">
                                     <option value="" disabled selected>Choose your option</option>    
-                                <c:forEach var="opcoes" items="${AtendimentoPorAtendente}">
-                                    <option value="${opcoes.id}&${opcoes.horaInicio}&${opcoes.horaFim}">
+                                    <c:forEach var="opcoes" items="${AtendimentoPorAtendente}">
+                                        <option value="${opcoes.id}&${opcoes.horaInicio}&${opcoes.horaFim}">
                                         <b>Horário:</b>${opcoes.horaInicio}/${opcoes.horaFim}
-                                    </option>
-                                </c:forEach>
+                                        </option>
+                                    </c:forEach>
                                 </select>
-                                <div class="input-field col s12">
-                                    <select name="cliente">
-                                        <option value="" disabled selected>Choose your option</option>
-                                        <MyTags:BuscaUsuarios/>
-                                        <c:choose>
-                                            <c:when test="${empty Usuarios}">
-                                                <h2>Não existem usuários cadastrados.</h2>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <c:forEach var="usuario" items="${Usuarios}">
-                                                    <option value="${usuario.email}">${usuario.nome}</option>
-                                                </c:forEach>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </select>
-                                    <label>Cliente</label>
-                                </div>
+                                <input type="hidden" name="cliente" value="${user.email}">
                                 <input type="hidden" name="data" value="${param.data}">
                                 <input type="hidden" name="servico" value="${param.servico}">
                                 <button class="btn" type="submit">Agendar</button>
