@@ -25,20 +25,22 @@ public class ServicoDao implements Serializable{
     public ServicoDao() {
     }
 
-    public Servico cadastroServico(Servico servico) throws ClassNotFoundException {
+    public boolean cadastroServico(Servico servico) throws ClassNotFoundException {
         try (Connection con = ConFactory.getConnection()) {
+            int retorno;
             String sql = "INSERT INTO servico (nome, tempoMedio, preco) VALUES (?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, servico.getNome());
             stmt.setInt(2, servico.getTempoMedio());
             stmt.setFloat(3, servico.getPreco());
-            stmt.executeUpdate();
+            retorno = stmt.executeUpdate();
             stmt.close();
             con.close();
+            return retorno>0;
         } catch (SQLException ex) {
             Logger.getLogger(AtendenteDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return false;
     }
 
     public ArrayList<Servico> readAll() {

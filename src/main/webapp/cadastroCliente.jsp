@@ -21,14 +21,36 @@
         <h2 align="center">Cadastro de Cliente</h2>
         <div class="container">
             <div class="row"> 
-                <form action="FrontController?controller=CadastroUsuarioController" method="POST">
-                    <input type="email" name="email" value="${param.email}">
-                    <input type="text" name="nome" value="${param.nome}">
-                    <input type="text" name="telefone" value="${param.telefone}">
-                    <input type="file" name="foto" value="${param.foto}">
+                <form action="FrontController?controller=CadastroUsuarioController" method="POST" enctype="multipart/form-data">
+                    <h3>Email</h3>
+                    <input type="email" name="email" required>
+                    <h3>Senha</h3>
+                    <input type="password" name="senha" required>
+                    <h3>Nome</h3>
+                    <input type="text" name="nome" required>
+                    <h3>Telefone</h3>
+                    <input type="tel" name="telefone">
+                    <h3>FotoPerfil</h3>
+                    <div class="file-field input-field">
+                        <div class="btn">
+                            <span>Foto</span>
+                            <input name="fotoPerfil" type="file">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
                     <button class="btn" type="submit">Cadastrar</button>
                 </form>
             </div>
         </div>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script type="text/javascript" src="js/initialize.js"/>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('select').material_select();
+            });
+        </script>
     </body>
 </html>

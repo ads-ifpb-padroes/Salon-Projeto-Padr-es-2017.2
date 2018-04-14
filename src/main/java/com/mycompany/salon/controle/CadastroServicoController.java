@@ -30,9 +30,20 @@ public class CadastroServicoController implements Command, Serializable {
 
             ServicoDao dao = new ServicoDao();
             Servico servico = new Servico(nome, tempoMedio, preco);
-            dao.cadastroServico(servico);
+            if (nome.equals("")) {
+                res.sendRedirect("cadastroServico.jsp?msg=Preencha os campos vazios.");
+            } else {
+                if (dao.readByNome(nome)==null) {
+                    if (dao.cadastroServico(servico)) {
+                        res.sendRedirect("cadastroServico.jsp?msg=Cadastro de servco realizado com sucesso.");
+                    } else {
+                        res.sendRedirect("cadastroServico.jsp?msg=Cadastro de servco falhou.");
+                    }
+                }else{
+                    res.sendRedirect("cadastroServico.jsp?msg=Ja existe um serviço com esse nome no sistema.");
+                }
+            }
 
-            res.sendRedirect("index.jsp");
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(CadastroUsuarioController.class.getName()).log(Level.SEVERE, null, ex);
         }

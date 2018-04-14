@@ -13,7 +13,7 @@ import java.time.LocalTime;
  * @author ThigoYure
  */
 public class AtendimentoBuilder {
-    private final Atendimento atendimento;
+    private Atendimento atendimento;
 
     public AtendimentoBuilder() {
         atendimento = new Atendimento();

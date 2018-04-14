@@ -24,19 +24,22 @@ import javax.inject.Named;
 @Named
 public class UsuarioDao implements Serializable{
     
-    public Usuario cadastroUsuario(Usuario usuario) throws ClassNotFoundException {
+    public boolean cadastroUsuario(Usuario usuario) throws ClassNotFoundException {
         try (Connection con = ConFactory.getConnection()) {
-            String sql = "INSERT INTO usuario (email, nome, telefone, fotoPerfil) VALUES (?,?,?,?)";
+            int retorno;
+            String sql = "INSERT INTO usuario (email, nome, senha, telefone, fotoPerfil) VALUES (?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, usuario.getEmail());
             stmt.setString(2, usuario.getNome());
-            stmt.setString(3, usuario.getTelefone());
-            stmt.setString(4, usuario.getFotoPerfil());
-            stmt.executeUpdate();
+            stmt.setString(3, usuario.getSenha());
+            stmt.setString(4, usuario.getTelefone());
+            stmt.setString(5, usuario.getFotoPerfil());
+            retorno = stmt.executeUpdate();
+            return retorno>0;
         } catch (SQLException ex) {
             Logger.getLogger(AtendenteDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return false;
     }
 
     public Usuario readByEmail(String email) {
@@ -50,6 +53,7 @@ public class UsuarioDao implements Serializable{
                 user.setFotoPerfil(r.getString("fotoPerfil"));
                 user.setNome(r.getString("nome"));
                 user.setTelefone(r.getString("telefone"));
+                user.setTipo(r.getString("tipo"));
                 return user;
             }
             st.close();

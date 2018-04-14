@@ -26,20 +26,22 @@ import javax.inject.Named;
 @Named
 public class AtendenteDao implements Serializable{
 
-    public Atendente cadastroAtendente(Atendente atendente) throws ClassNotFoundException {
+    public boolean cadastroAtendente(Atendente atendente) throws ClassNotFoundException {
         try (Connection con = ConFactory.getConnection()) {
+            int retorno;
             String sql = "INSERT INTO atendente (nome, horaInicio, horaFim) VALUES (?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, atendente.getNome());
             stmt.setTime(2, Time.valueOf(atendente.getHoraInício()));
             stmt.setTime(3, Time.valueOf(atendente.getHoraFim()));
-            stmt.executeUpdate();
+            retorno = stmt.executeUpdate();
             stmt.close();
             con.close();
+            return retorno>0;
         } catch (SQLException ex) {
             Logger.getLogger(AtendenteDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return false;
     }
 
     public ArrayList<Atendente> readAll() {

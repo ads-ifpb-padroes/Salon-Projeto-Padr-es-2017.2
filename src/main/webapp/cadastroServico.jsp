@@ -22,12 +22,30 @@
         <div class="container">
             <div class="row"> 
                 <form action="FrontController?controller=CadastroServicoController" method="POST">
-                    <input type="text" name="nome" value="${param.nome}">
-                    <input type="time" name="tempoMedio" value="${param.tempoMedio}">
-                    <input type="number" name="preco" value="${param.preco}">
+                    <div class="input-field">
+                        <input name="nome" type="text">
+                    </div>
+                    <div class="input-field">
+                        <select name="tempoMedio">
+                            <option value="" disabled selected>Escolha o período</option>
+                            <option value="30">30 min</option>
+                            <option value="60">60 min</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <input name="preco" type="int">
+                    </div>
                     <button class="btn" type="submit">Cadastrar</button>
                 </form>
             </div>
         </div>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script type="text/javascript" src="js/initialize.js"/>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('select').material_select();
+            });
+        </script>
     </body>
 </html>

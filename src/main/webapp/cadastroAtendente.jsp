@@ -22,12 +22,20 @@
         <div class="container">
             <div class="row"> 
                 <form action="FrontController?controller=CadastroAtendenteController" method="POST">
-                    <input type="text" name="nome" value="${param.nome}">
-                    <input type="time" name="horaInicio" value="${param.horaInicio}">
-                    <input type="time" name="horaFim" value="${param.horaFim}">
+                    <input type="text" name="nome">
+                    <input class="timepicker" type="text" name="horaInicio">
+                    <input class="timepicker" type="text" name="horaFim">
                     <button class="btn" type="submit">Cadastrar</button>
                 </form>
             </div>
         </div>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script type="text/javascript" src="js/initialize.js"/>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('select').material_select();
+            });
+        </script>
     </body>
 </html>
