@@ -42,7 +42,6 @@ public class AgendarAtendimentoControllerAdmin implements Command, Serializable 
         atendimento.setConfirmado(false);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         atendimento.setData(LocalDate.parse(req.getParameter("data"), formatter));
-        System.out.println(req.getParameter("horaInicio"));
         LocalTime horaInicio = LocalTime.parse(atributos[1]);
         LocalTime horaFim = LocalTime.parse(atributos[2]);
         atendimento.setHoraInicio(horaInicio);
@@ -60,7 +59,7 @@ public class AgendarAtendimentoControllerAdmin implements Command, Serializable 
                 Logger.getLogger(AgendarAtendimentoControllerAdmin.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            if (atendimentoDao.create(atendimento)) {
+            if (atendimentoDao.createAtendimento(atendimento)) {
                 try {
                     res.sendRedirect("agendamentoDeHorarioAdmin.jsp?msg=Horario marcado com sucesso.");
                 } catch (IOException ex) {

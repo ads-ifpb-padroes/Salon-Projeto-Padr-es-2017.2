@@ -54,6 +54,7 @@ public class UsuarioDao implements Serializable{
                 user.setNome(r.getString("nome"));
                 user.setTelefone(r.getString("telefone"));
                 user.setTipo(r.getString("tipo"));
+                user.setSenha(r.getString("senha"));
                 return user;
             }
             st.close();
@@ -67,7 +68,7 @@ public class UsuarioDao implements Serializable{
 
     public Object readAll() {
         try (Connection con = ConFactory.getConnection()) {
-            PreparedStatement st = con.prepareStatement("SELECT * FROM usuario");
+            PreparedStatement st = con.prepareStatement("SELECT * FROM usuario where tipo is null");
             ResultSet r = st.executeQuery();
             ArrayList<Usuario> retorno = new ArrayList<>();
             while (r.next()) {

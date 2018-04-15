@@ -54,9 +54,9 @@ public class AtendimentoDao implements Serializable {
                 while (ultimoHorario != atendenteObj.getHoraFim()) {
                     auxiliar = ultimoHorario;
                     ultimoHorario = auxiliar.plusMinutes(servicoDoAtendente.getTempoMedio());
-                    PreparedStatement st2 = con.prepareStatement("SELECT * FROM atendimento WHERE (horainicio = ? or ? between horainicio and horafim) and data = ?");
+                    PreparedStatement st2 = con.prepareStatement("SELECT * FROM atendimento WHERE (horainicio = ? or ? between horainicio and horafim) and data = ? and confirmado = false");
                     st2.setTime(1, Time.valueOf(auxiliar));
-                    st2.setTime(2, Time.valueOf(ultimoHorario.plusMinutes(1)));
+                    st2.setTime(2, Time.valueOf(ultimoHorario.minusMinutes(1)));
                     st2.setDate(3, Date.valueOf(dataAgenda));
                     ResultSet rs = st2.executeQuery();
                     if (!rs.next()) {
@@ -110,7 +110,6 @@ public class AtendimentoDao implements Serializable {
     public ArrayList<Atendimento> readHorariosByServico(String servico, String data) {
         try (Connection con = ConFactory.getConnection()) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            System.out.println(servico);
             LocalDate dataAgenda = LocalDate.parse(data, dtf);
             PreparedStatement st = con.prepareStatement("SELECT * FROM atendimento WHERE servico = ? and confirmado is null");
             st.setString(1, servico);
@@ -131,10 +130,11 @@ public class AtendimentoDao implements Serializable {
                     ultimoHorario = auxiliar.plusMinutes(servicoDoAtendente.getTempoMedio());
                     System.out.println(auxiliar);
                     System.out.println(ultimoHorario);
-                    PreparedStatement st2 = con.prepareStatement("SELECT * FROM atendimento WHERE (horainicio = ? or ? between horainicio and horafim) and data = ?");
+                    PreparedStatement st2 = con.prepareStatement("SELECT * FROM atendimento WHERE (horainicio = ? or ? between horainicio and horafim) and data = ? and confirmado = false and atendente = ?");
                     st2.setTime(1, Time.valueOf(auxiliar));
-                    st2.setTime(2, Time.valueOf(ultimoHorario.plusMinutes(1)));
+                    st2.setTime(2, Time.valueOf(ultimoHorario.minusMinutes(1)));
                     st2.setDate(3, Date.valueOf(dataAgenda));
+                    st2.setString(4,atendente.getNome());
                     ResultSet rs = st2.executeQuery();
                     if (!rs.next()) {
                         System.out.println("oi");
@@ -183,7 +183,7 @@ public class AtendimentoDao implements Serializable {
         return null;
     }
 
-    public boolean create(Atendimento atendimento) {
+    public boolean createAtendimento(Atendimento atendimento) {
         try {
             int retorno;
             try (Connection con = ConFactory.getConnection()) {
@@ -207,11 +207,30 @@ public class AtendimentoDao implements Serializable {
 
         return false;
     }
+    
+    public boolean createAgenda(Atendimento atendimento) {
+        try {
+            int retorno;
+            try (Connection con = ConFactory.getConnection()) {
+                PreparedStatement st = con.prepareStatement("INSERT INTO Atendimento (atendente,servico) VALUES(?,?)");
+                st.setString(1, atendimento.getAtendente().getNome());
+                st.setString(2, atendimento.getServico().getNome());
+                retorno = st.executeUpdate();
+                st.close();
+                con.close();
+            }
+            return retorno > 0;
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(AtendimentoDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return false;
+    }
 
     public Atendimento readByDataHorarioAtendente(LocalDate data, LocalTime horaInicio, String nome) {
         try (Connection con = ConFactory.getConnection()) {
             PreparedStatement st = con.prepareStatement("SELECT * FROM atendimento WHERE data = ? and (horainicio = ? or ? between horainicio and horafim) and atendente = ?");
-            st.setString(1, data.toString());
+            st.setDate(1, Date.valueOf(data));
             st.setTime(2, Time.valueOf(horaInicio));
             st.setTime(3, Time.valueOf(horaInicio));
             st.setString(4, nome);
@@ -306,7 +325,27 @@ public class AtendimentoDao implements Serializable {
         }
         return null;
     }
-
+    
+    public Servico readServicoAgendaByAtendente(String atendente,String servico) {
+        try (Connection con = ConFactory.getConnection()) {
+            PreparedStatement st = con.prepareStatement("SELECT * FROM atendimento where atendente = ? and servico = ? and confirmado is null");
+            st.setString(1, atendente);
+            st.setString(2, servico);
+            ResultSet r = st.executeQuery();
+            ServicoDao servicoDao = new ServicoDao();
+            if (r.next()) {
+                Servico servicoObj = servicoDao.readByNome(r.getString("servico"));
+                return servicoObj;
+            }
+            st.close();
+            con.close();
+            return null;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AtendenteDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public ArrayList<Atendimento> readAtendimentosPendentes() {
         try (Connection con = ConFactory.getConnection()) {
             PreparedStatement st = con.prepareStatement("SELECT * FROM atendimento where confirmado is false");

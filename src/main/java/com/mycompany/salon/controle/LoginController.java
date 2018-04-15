@@ -40,8 +40,8 @@ public class LoginController implements Command, Serializable {
                 session.setAttribute("user", user);
                 System.out.println(session.getAttribute("user"));
                 try {
-                    if(user.getTipo().equals("")){
-                        res.sendRedirect("inicialCliente.jsp");
+                    if(user.getTipo()==null){
+                        res.sendRedirect("inicialClient.jsp");
                     }else{
                         res.sendRedirect("inicialAdmin.jsp");
                     }

@@ -61,7 +61,7 @@ public class AgendarAtendimentoControllerCliente implements Command, Serializabl
                 Logger.getLogger(AgendarAtendimentoControllerCliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            if (atendimentoDao.create(atendimento)) {
+            if (atendimentoDao.createAtendimento(atendimento)) {
                 try {
                     res.sendRedirect("agendamentoDeHorarioCliente.jsp?msg=Horario marcado com sucesso.");
                 } catch (IOException ex) {

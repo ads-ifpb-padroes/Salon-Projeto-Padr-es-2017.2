@@ -23,17 +23,20 @@
             <div class="row"> 
                 <form action="FrontController?controller=CadastroServicoController" method="POST">
                     <div class="input-field">
+                        <h3>Nome do Serviço</h3>
                         <input name="nome" type="text">
                     </div>
                     <div class="input-field">
                         <select name="tempoMedio">
-                            <option value="" disabled selected>Escolha o período</option>
+                            <option value="" disabled selected>Choose your option</option>
                             <option value="30">30 min</option>
                             <option value="60">60 min</option>
                         </select>
+                        <label>Tempo Médio</label>
                     </div>
                     <div class="input-field">
-                        <input name="preco" type="int">
+                        <h3>preço</h3>
+                        <input name="preco" type="text">
                     </div>
                     <button class="btn" type="submit">Cadastrar</button>
                 </form>
@@ -41,10 +44,9 @@
         </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="js/materialize.min.js"></script>
-        <script type="text/javascript" src="js/initialize.js"/>
         <script type="text/javascript">
             $(document).ready(function () {
-                $('select').material_select();
+                $('select').formSelect();
             });
         </script>
     </body>

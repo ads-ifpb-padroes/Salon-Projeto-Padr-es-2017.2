@@ -90,9 +90,6 @@
         <script type="text/javascript" src="js/materialize.min.js"></script>
         <script type="text/javascript" src="js/initialize.js"/>
         <script type="text/javascript">
-            $(document).ready(function () {
-                $('select').material_select();
-            });
         </script>
     </body>
 </html>

@@ -22,9 +22,12 @@
         <div class="container">
             <div class="row"> 
                 <form action="FrontController?controller=CadastroAtendenteController" method="POST">
+                    <h3>nome</h3>
                     <input type="text" name="nome">
-                    <input class="timepicker" type="text" name="horaInicio">
-                    <input class="timepicker" type="text" name="horaFim">
+                    <h3>Horário de Entrada</h3>
+                    <input type="text" name="horaInicio">
+                    <h3>Horário de Saída</h3>
+                    <input type="text" name="horaFim">
                     <button class="btn" type="submit">Cadastrar</button>
                 </form>
             </div>

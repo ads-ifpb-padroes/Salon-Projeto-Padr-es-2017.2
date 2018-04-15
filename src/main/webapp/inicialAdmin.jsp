@@ -15,7 +15,15 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="col s12">
+                <div class="col s4">
+                    <a href="agendamentoDeHorarioAdmin.jsp"><button class="btn">Marcar Horário</button></a>
+                    <a href="cadastroAtendente.jsp"><button class="btn">Cadastrar Atendente</button></a>
+                    <a href="cadastroAgenda.jsp"><button class="btn">Adcionar Serviço a agenda</button></a>
+                    <a href="cadastroServico.jsp"><button class="btn">Cadastrar Serviço</button></a>
+                    <a href="PesquisaFidelidade.jsp"><button class="btn">Controle de Fidelidade</button></a>
+                    <a href="FrontController?controller=SairController"><button class="btn">Sair</button></a>
+                </div>
+                <div class="col s8">
                     <MyTags:BuscaAtendimentosPendentes/>
                     <c:choose>
                         <c:when test="${empty AtendimentosPendentes}">
