@@ -393,4 +393,62 @@ public class AtendimentoDao implements Serializable {
         return false;
     }
 
+    public ArrayList<Atendimento> readAtendimentosComAvaliacoesPendentes() {
+        try (Connection con = ConFactory.getConnection()) {
+            PreparedStatement st = con.prepareStatement("SELECT * FROM atendimento where confirmado is false");
+            ResultSet r = st.executeQuery();
+            ArrayList<Atendimento> retorno = new ArrayList<>();
+            AtendenteDao atendenteDao = new AtendenteDao();
+            ServicoDao servicoDao = new ServicoDao();
+            UsuarioDao usuarioDao = new UsuarioDao();
+            while (r.next()) {
+                if(r.getDate("data").toLocalDate().equals(LocalDate.now())){
+                    Atendimento atendimento;
+                    AtendimentoBuilder builder = new AtendimentoBuilder();
+                    Atendente atendente = atendenteDao.readByNome(r.getString("atendente"));
+                    Servico servico = servicoDao.readByNome(r.getString("servico"));
+                    Usuario usuario = usuarioDao.readByEmail(r.getString("cliente"));
+                    builder.comAtendente(atendente).comCliente(usuario).comServico(servico).comId(r.getInt("id")).comData(r.getDate("data").toLocalDate()).comConfirmado(r.getBoolean("confirmado")).comHoraInicio(r.getTime("horainicio").toLocalTime()).comHoraFim(r.getTime("horafim").toLocalTime());
+                    atendimento = builder.getAtendimento();
+                    retorno.add(atendimento);
+                }
+            }
+            st.close();
+            con.close();
+            return retorno;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AtendenteDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public Atendimento readAtendimentoById(int idAtendimento) {
+        try (Connection con = ConFactory.getConnection()) {
+            PreparedStatement st = con.prepareStatement("SELECT * FROM atendimento WHERE id = ?");
+            st.setInt(1, idAtendimento);
+            ResultSet r = st.executeQuery();
+            ArrayList<Atendimento> retorno = new ArrayList<>();
+            AtendenteDao atendenteDao = new AtendenteDao();
+            ServicoDao servicoDao = new ServicoDao();
+            UsuarioDao usuarioDao = new UsuarioDao();
+            AtendimentoBuilder builder = new AtendimentoBuilder();
+            if (r.next()) {
+                Atendimento atendimento;
+                Atendente atendente = atendenteDao.readByNome(r.getString("atendente"));
+                Servico servico = servicoDao.readByNome(r.getString("servico"));
+                Usuario usuario = usuarioDao.readByEmail(r.getString("cliente"));
+                int id = r.getInt("id");
+                builder.comAtendente(atendente).comServico(servico).comId(id);
+                atendimento = builder.getAtendimento();
+                return atendimento;
+            }
+            st.close();
+            con.close();
+            return null;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AtendenteDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
 }

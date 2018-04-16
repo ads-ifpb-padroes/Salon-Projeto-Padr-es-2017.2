@@ -21,6 +21,7 @@
                     <a href="cadastroAgenda.jsp"><button class="btn">Adcionar Serviço a agenda</button></a>
                     <a href="cadastroServico.jsp"><button class="btn">Cadastrar Serviço</button></a>
                     <a href="PesquisaFidelidade.jsp"><button class="btn">Controle de Fidelidade</button></a>
+                    <a href="Avaliacoes.jsp"><button class="btn">Avaliacoes</button></a>
                     <a href="FrontController?controller=SairController"><button class="btn">Sair</button></a>
                 </div>
                 <div class="col s8">

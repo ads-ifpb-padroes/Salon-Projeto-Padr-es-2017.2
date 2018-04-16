@@ -20,10 +20,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
 
 /**
  *
  * @author ThigoYure
+ * @author Ricarte
  */
 @Named
 public class AgendarAtendimentoControllerAdmin implements Command, Serializable {
@@ -61,8 +64,22 @@ public class AgendarAtendimentoControllerAdmin implements Command, Serializable 
         } else {
             if (atendimentoDao.createAtendimento(atendimento)) {
                 try {
+                    if (atendimento.getData().isAfter(LocalDate.now())) {
+                        SimpleEmail email = new SimpleEmail();
+                        System.out.println("oi");
+                        email.setHostName("smtp.gmail.com"); // o servidor SMTP para envio do e-mail
+                        email.addTo(atendimento.getCliente().getEmail(), atendimento.getCliente().getNome()); //destinatário
+                        email.setFrom("thigoyure@gmail.com", "Admin from Salon"); // remetente
+                        email.setSubject("Mensagem de Confirmação"); // assunto do e-mail
+                        email.setMsg("Agendamento de horário no Salon para o dia "+atendimento.getData()+" foi feito com sucesso. \nNão esqueça. :D\nAtendente: "
+                                + atendimento.getAtendente().getNome()+"\nServiço: "+atendimento.getServico().getNome()); //conteudo do e-mail
+                        email.setSmtpPort(465);
+                        email.setAuthentication("thigoyure@gmail.com", "senha");
+                        email.setSSLOnConnect(true);
+                        email.send(); //envia o e-mail
+                    }
                     res.sendRedirect("agendamentoDeHorarioAdmin.jsp?msg=Horario marcado com sucesso.");
-                } catch (IOException ex) {
+                } catch (IOException | EmailException ex) {
                     Logger.getLogger(AgendarAtendimentoControllerAdmin.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {

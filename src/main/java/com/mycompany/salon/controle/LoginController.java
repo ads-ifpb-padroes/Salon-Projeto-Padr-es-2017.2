@@ -5,10 +5,13 @@
  */
 package com.mycompany.salon.controle;
 
+import com.mycompany.salon.modelo.Agendador;
 import com.mycompany.salon.modelo.Usuario;
 import com.mycompany.salon.persistencia.UsuarioDao;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +20,10 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author ThigoYure
+ * @author Ricarte
  */
 public class LoginController implements Command, Serializable {
-    
+
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) {
         String email = req.getParameter("email");
@@ -40,9 +43,12 @@ public class LoginController implements Command, Serializable {
                 session.setAttribute("user", user);
                 System.out.println(session.getAttribute("user"));
                 try {
-                    if(user.getTipo()==null){
+                    if (user.getTipo() == null) {
                         res.sendRedirect("inicialClient.jsp");
-                    }else{
+                    } else {
+                        Timer timer = new Timer();
+                        Agendador agendador = new Agendador();
+                        timer.schedule(agendador, new Date(), 60000);
                         res.sendRedirect("inicialAdmin.jsp");
                     }
                 } catch (IOException ex) {
@@ -55,7 +61,7 @@ public class LoginController implements Command, Serializable {
                     Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }        
+        }
     }
-    
+
 }
